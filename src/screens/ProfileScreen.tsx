@@ -14,9 +14,6 @@ export function ProfileScreen() {
     paymentMethod,
     setPaymentMethod,
     logout,
-    draftApiBaseUrl,
-    setDraftApiBaseUrl,
-    saveApiBaseUrl,
     setTab,
   } = useAppContext();
 
@@ -54,12 +51,6 @@ export function ProfileScreen() {
           <Text style={styles.helpText}>{paymentMethod === 'UPI_QR' ? 'UPI ID: 8923541428@axl | Number: 8923541428' : 'COD selected'}</Text>
         </View>
       ) : null}
-
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>API Configuration</Text>
-        <AppInput value={draftApiBaseUrl} onChangeText={setDraftApiBaseUrl} autoCapitalize="none" />
-        <AppButton title="Save URL" variant="outline" onPress={() => saveApiBaseUrl().catch(() => undefined)} />
-      </View>
 
       <AppButton title="Logout" variant="danger" onPress={() => logout().catch(() => undefined)} />
     </ScrollView>

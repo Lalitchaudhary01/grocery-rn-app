@@ -1,7 +1,4 @@
-import { Platform } from 'react-native';
-
-export const defaultApiBaseUrl =
-  Platform.OS === 'android' ? 'http://10.0.2.2:3000' : 'http://localhost:3000';
+export const defaultApiBaseUrl = 'https://grocery-app-flame-eight.vercel.app';
 
 export type ApiResult<T> = {
   ok: boolean;
