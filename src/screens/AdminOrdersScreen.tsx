@@ -1,0 +1,112 @@
+import React from 'react';
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
+
+import { AppButton } from '../components/common/AppButton';
+import { colors } from '../constants/theme';
+import { useAppContext } from '../context/AppContext';
+import { formatInr } from '../utils/format';
+
+export function AdminOrdersScreen() {
+  const { adminOrders, loadingAdminOrders, reloadAdminOrders, adminSetOrderStatus } = useAppContext();
+
+  return (
+    <View style={styles.wrap}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Admin Orders</Text>
+        <AppButton title="Refresh" variant="outline" onPress={() => reloadAdminOrders().catch(() => undefined)} />
+      </View>
+
+      {loadingAdminOrders ? (
+        <View style={styles.center}><ActivityIndicator color={colors.primary} /></View>
+      ) : (
+        <FlatList
+          data={adminOrders}
+          keyExtractor={item => item.id}
+          contentContainerStyle={styles.listContent}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <View style={styles.rowBetween}>
+                <Text style={styles.orderId}>#{item.id.slice(0, 8).toUpperCase()}</Text>
+                <Text style={styles.status}>{item.status}</Text>
+              </View>
+              <Text style={styles.meta}>Customer: {item.customer?.name || item.customer?.email || 'N/A'}</Text>
+              <Text style={styles.meta}>Phone: {item.address?.phone || 'N/A'}</Text>
+              <Text style={styles.meta}>Amount: {formatInr(item.total)}</Text>
+              <Text style={styles.meta}>Address: {item.address?.street || 'N/A'}</Text>
+
+              <View style={styles.actions}>
+                <AppButton title="Confirm" variant="outline" onPress={() => adminSetOrderStatus(item.id, 'CONFIRMED').catch(() => undefined)} />
+                <AppButton title="Ship" variant="outline" onPress={() => adminSetOrderStatus(item.id, 'SHIPPED').catch(() => undefined)} />
+                <AppButton title="Deliver" onPress={() => adminSetOrderStatus(item.id, 'DELIVERED').catch(() => undefined)} />
+                <AppButton title="Cancel" variant="danger" onPress={() => adminSetOrderStatus(item.id, 'CANCELLED', 'Cancelled by admin').catch(() => undefined)} />
+              </View>
+            </View>
+          )}
+          ListEmptyComponent={<Text style={styles.emptyText}>No orders.</Text>}
+        />
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  wrap: { flex: 1 },
+  header: {
+    paddingHorizontal: 12,
+    paddingTop: 12,
+    paddingBottom: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: colors.text,
+  },
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  listContent: {
+    padding: 12,
+    paddingTop: 4,
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    borderRadius: 14,
+    padding: 12,
+    marginBottom: 10,
+  },
+  rowBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  orderId: {
+    color: colors.text,
+    fontSize: 15,
+    fontWeight: '800',
+  },
+  status: {
+    color: '#166534',
+    fontWeight: '800',
+  },
+  meta: {
+    marginTop: 3,
+    color: '#374151',
+    fontSize: 13,
+  },
+  actions: {
+    marginTop: 8,
+    gap: 6,
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#4b5563',
+    marginTop: 18,
+  },
+});
