@@ -77,6 +77,10 @@ type AppContextValue = {
   loadingAdminOrders: boolean;
   reloadAdminOrders: () => Promise<void>;
   adminSetOrderStatus: (orderId: string, status: OrderStatus, cancelReason?: string) => Promise<void>;
+  adminSetPaymentStatus: (
+    orderId: string,
+    paymentStatus: "PENDING_VERIFICATION" | "VERIFIED" | "FAILED",
+  ) => Promise<void>;
 
   adminCreateProduct: (payload: {
     name: string;
@@ -481,6 +485,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     Alert.alert('Updated', `Order marked as ${status}.`);
   }, [apiBaseUrl, reloadAdminOrders]);
 
+  const adminSetPaymentStatus = useCallback(
+    async (orderId: string, paymentStatus: "PENDING_VERIFICATION" | "VERIFIED" | "FAILED") => {
+      const res = await updateOrderStatus(apiBaseUrl, orderId, {
+        paymentStatus,
+      });
+      if (!res.ok) {
+        Alert.alert('Payment update failed', res.error || 'Payment verification update failed.');
+        return;
+      }
+      await reloadAdminOrders();
+      Alert.alert('Updated', `Payment marked as ${paymentStatus}.`);
+    },
+    [apiBaseUrl, reloadAdminOrders],
+  );
+
   const adminCreateProduct = useCallback(async (payload: {
     name: string;
     description?: string | null;
@@ -631,6 +650,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     loadingAdminOrders,
     reloadAdminOrders,
     adminSetOrderStatus,
+    adminSetPaymentStatus,
 
     adminCreateProduct,
     adminUpdateProduct,

@@ -5,15 +5,19 @@ export async function adminLogin(baseUrl: string, payload: { email: string; pass
   return requestApi<{ user: { id: string; role: 'ADMIN' } }>(baseUrl, '/api/auth/login', {
     method: 'POST',
     body: JSON.stringify(payload),
-  });
+  }, { allowFallback: true });
 }
 
 export async function adminLogout(baseUrl: string) {
-  return requestApi<{ message: string }>(baseUrl, '/api/auth/logout', { method: 'POST' });
+  return requestApi<{ message: string }>(baseUrl, '/api/auth/logout', { method: 'POST' }, {
+    allowFallback: true,
+  });
 }
 
 export async function getAdminOrders(baseUrl: string) {
-  return requestApi<{ orders: Order[] }>(baseUrl, '/api/orders/admin');
+  return requestApi<{ orders: Order[] }>(baseUrl, '/api/orders/admin', undefined, {
+    allowFallback: true,
+  });
 }
 
 export async function updateOrderStatus(
@@ -24,7 +28,7 @@ export async function updateOrderStatus(
   return requestApi<{ message: string; order: Order }>(baseUrl, `/api/orders/${orderId}`, {
     method: 'PATCH',
     body: JSON.stringify(payload),
-  });
+  }, { allowFallback: true });
 }
 
 export async function createProduct(
@@ -45,7 +49,7 @@ export async function createProduct(
   return requestApi<{ product: Product }>(baseUrl, '/api/products', {
     method: 'POST',
     body: JSON.stringify(payload),
-  });
+  }, { allowFallback: true });
 }
 
 export async function updateProduct(
@@ -67,31 +71,31 @@ export async function updateProduct(
   return requestApi<{ product: Product }>(baseUrl, `/api/products/${productId}`, {
     method: 'PATCH',
     body: JSON.stringify(payload),
-  });
+  }, { allowFallback: true });
 }
 
 export async function deleteProduct(baseUrl: string, productId: string) {
   return requestApi<{ message: string }>(baseUrl, `/api/products/${productId}`, {
     method: 'DELETE',
-  });
+  }, { allowFallback: true });
 }
 
 export async function createCategory(baseUrl: string, payload: { name: string }) {
   return requestApi<{ category: Category }>(baseUrl, '/api/categories', {
     method: 'POST',
     body: JSON.stringify(payload),
-  });
+  }, { allowFallback: true });
 }
 
 export async function updateCategory(baseUrl: string, categoryId: string, payload: { name: string }) {
   return requestApi<{ category: Category }>(baseUrl, `/api/categories/${categoryId}`, {
     method: 'PATCH',
     body: JSON.stringify(payload),
-  });
+  }, { allowFallback: true });
 }
 
 export async function deleteCategory(baseUrl: string, categoryId: string) {
   return requestApi<{ message: string }>(baseUrl, `/api/categories/${categoryId}`, {
     method: 'DELETE',
-  });
+  }, { allowFallback: true });
 }

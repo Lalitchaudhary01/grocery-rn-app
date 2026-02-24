@@ -2,9 +2,13 @@ import { requestApi } from './api';
 import type { Category, Product } from '../types/models';
 
 export async function getProducts(baseUrl: string) {
-  return requestApi<{ products: Product[] }>(baseUrl, '/api/products');
+  return requestApi<{ products: Product[] }>(baseUrl, '/api/products', undefined, {
+    allowFallback: true,
+  });
 }
 
 export async function getCategories(baseUrl: string) {
-  return requestApi<{ categories: Category[] }>(baseUrl, '/api/categories');
+  return requestApi<{ categories: Category[] }>(baseUrl, '/api/categories', undefined, {
+    allowFallback: true,
+  });
 }

@@ -15,5 +15,7 @@ export async function createOrder(baseUrl: string, payload: OrderCreatePayload) 
 }
 
 export async function getMyOrders(baseUrl: string) {
-  return requestApi<{ orders: Order[] }>(baseUrl, '/api/orders/my');
+  return requestApi<{ orders: Order[] }>(baseUrl, '/api/orders/my', {
+    method: 'GET',
+  }, { allowFallback: true });
 }

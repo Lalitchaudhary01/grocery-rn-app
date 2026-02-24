@@ -7,7 +7,14 @@ import { useAppContext } from '../context/AppContext';
 import { formatInr } from '../utils/format';
 
 export function AdminOrdersScreen() {
-  const { adminOrders, loadingAdminOrders, reloadAdminOrders, adminSetOrderStatus, openProductDetail } = useAppContext();
+  const {
+    adminOrders,
+    loadingAdminOrders,
+    reloadAdminOrders,
+    adminSetOrderStatus,
+    adminSetPaymentStatus,
+    openProductDetail,
+  } = useAppContext();
 
   return (
     <View style={styles.wrap}>
@@ -35,6 +42,27 @@ export function AdminOrdersScreen() {
               <Text style={styles.meta}>Phone: {item.address?.phone || 'N/A'}</Text>
               <Text style={styles.meta}>Amount: {formatInr(item.total)}</Text>
               <Text style={styles.meta}>Address: {item.address?.street || 'N/A'}</Text>
+              <View style={styles.rowBetween}>
+                <Text style={styles.meta}>
+                  Payment: {item.paymentMethod === 'COD' ? 'COD' : 'UPI QR'}
+                </Text>
+                {item.paymentMethod === 'COD' ? (
+                  <Text style={[styles.status, styles.codStatus]}>COD</Text>
+                ) : (
+                  <Text
+                    style={[
+                      styles.status,
+                      item.paymentStatus === 'VERIFIED'
+                        ? styles.verifiedStatus
+                        : item.paymentStatus === 'FAILED'
+                          ? styles.failedStatus
+                          : styles.pendingPaymentStatus,
+                    ]}
+                  >
+                    {item.paymentStatus || 'PENDING_VERIFICATION'}
+                  </Text>
+                )}
+              </View>
               {item.items.slice(0, 4).map(orderItem => (
                 <Pressable key={orderItem.productId} onPress={() => openProductDetail(orderItem.productId)}>
                   <Text style={styles.itemText}>• {orderItem.product.name} x {orderItem.quantity}</Text>
@@ -42,9 +70,29 @@ export function AdminOrdersScreen() {
               ))}
 
               <View style={styles.actions}>
-                <AppButton title="Confirm" variant="outline" onPress={() => adminSetOrderStatus(item.id, 'CONFIRMED').catch(() => undefined)} />
-                <AppButton title="Ship" variant="outline" onPress={() => adminSetOrderStatus(item.id, 'SHIPPED').catch(() => undefined)} />
-                <AppButton title="Deliver" onPress={() => adminSetOrderStatus(item.id, 'DELIVERED').catch(() => undefined)} />
+                {item.paymentMethod !== 'COD' && item.paymentStatus !== 'VERIFIED' ? (
+                  <AppButton
+                    title="Verify Payment"
+                    onPress={() => adminSetPaymentStatus(item.id, 'VERIFIED').catch(() => undefined)}
+                  />
+                ) : null}
+                <AppButton
+                  title="Confirm"
+                  variant="outline"
+                  disabled={item.paymentMethod !== 'COD' && item.paymentStatus !== 'VERIFIED'}
+                  onPress={() => adminSetOrderStatus(item.id, 'CONFIRMED').catch(() => undefined)}
+                />
+                <AppButton
+                  title="Ship"
+                  variant="outline"
+                  disabled={item.paymentMethod !== 'COD' && item.paymentStatus !== 'VERIFIED'}
+                  onPress={() => adminSetOrderStatus(item.id, 'SHIPPED').catch(() => undefined)}
+                />
+                <AppButton
+                  title="Deliver"
+                  disabled={item.paymentMethod !== 'COD' && item.paymentStatus !== 'VERIFIED'}
+                  onPress={() => adminSetOrderStatus(item.id, 'DELIVERED').catch(() => undefined)}
+                />
                 <AppButton title="Cancel" variant="danger" onPress={() => adminSetOrderStatus(item.id, 'CANCELLED', 'Cancelled by admin').catch(() => undefined)} />
               </View>
             </View>
@@ -118,6 +166,22 @@ const styles = StyleSheet.create({
   activeStatus: {
     color: '#1e40af',
     backgroundColor: '#dbeafe',
+  },
+  codStatus: {
+    color: '#92400e',
+    backgroundColor: '#fef3c7',
+  },
+  pendingPaymentStatus: {
+    color: '#92400e',
+    backgroundColor: '#fef3c7',
+  },
+  verifiedStatus: {
+    color: '#065f46',
+    backgroundColor: '#d1fae5',
+  },
+  failedStatus: {
+    color: '#991b1b',
+    backgroundColor: '#fee2e2',
   },
   meta: {
     marginTop: 3,
