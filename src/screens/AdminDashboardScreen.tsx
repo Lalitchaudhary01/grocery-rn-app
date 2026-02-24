@@ -19,12 +19,13 @@ export function AdminDashboardScreen() {
   return (
     <View style={styles.wrap}>
       <Text style={styles.title}>Admin Dashboard</Text>
+      <Text style={styles.subtitle}>Store insights and quick actions</Text>
 
       <View style={styles.grid}>
-        <StatCard label="Delivered Revenue" value={formatInr(totalRevenue)} tone="green" />
-        <StatCard label="Pending Orders" value={String(pendingCount)} tone="amber" />
-        <StatCard label="Total Products" value={String(products.length)} tone="blue" />
-        <StatCard label="Categories" value={String(categories.length)} tone="neutral" />
+        <StatCard icon="₹" label="Delivered Revenue" value={formatInr(totalRevenue)} tone="green" />
+        <StatCard icon="⏳" label="Pending Orders" value={String(pendingCount)} tone="amber" />
+        <StatCard icon="📦" label="Total Products" value={String(products.length)} tone="blue" />
+        <StatCard icon="🗂" label="Categories" value={String(categories.length)} tone="neutral" />
       </View>
 
       <View style={styles.card}>
@@ -40,10 +41,21 @@ export function AdminDashboardScreen() {
   );
 }
 
-function StatCard({ label, value, tone }: { label: string; value: string; tone: 'green' | 'amber' | 'blue' | 'neutral' }) {
+function StatCard({
+  icon,
+  label,
+  value,
+  tone,
+}: {
+  icon: string;
+  label: string;
+  value: string;
+  tone: 'green' | 'amber' | 'blue' | 'neutral';
+}) {
   const bg = tone === 'green' ? '#dcfce7' : tone === 'amber' ? '#fef3c7' : tone === 'blue' ? '#dbeafe' : '#f3f4f6';
   return (
     <View style={[styles.statCard, { backgroundColor: bg }]}>
+      <Text style={styles.statIcon}>{icon}</Text>
       <Text style={styles.statLabel}>{label}</Text>
       <Text style={styles.statValue}>{value}</Text>
     </View>
@@ -56,10 +68,16 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   title: {
-    fontSize: 22,
-    fontWeight: '800',
+    fontSize: 26,
+    fontWeight: '900',
     color: colors.text,
+  },
+  subtitle: {
+    marginTop: 2,
     marginBottom: 10,
+    color: '#4b5563',
+    fontSize: 13,
+    fontWeight: '600',
   },
   grid: {
     flexDirection: 'row',
@@ -69,8 +87,14 @@ const styles = StyleSheet.create({
   },
   statCard: {
     width: '48%',
-    borderRadius: 12,
-    padding: 10,
+    borderRadius: 14,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#ffffffaa',
+  },
+  statIcon: {
+    fontSize: 16,
+    marginBottom: 2,
   },
   statLabel: {
     color: '#374151',
@@ -86,7 +110,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#dcfce7',
     borderRadius: 14,
     padding: 12,
   },

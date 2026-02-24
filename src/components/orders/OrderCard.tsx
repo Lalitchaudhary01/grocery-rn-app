@@ -1,11 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { Order } from '../../types/models';
 import { colors } from '../../constants/theme';
 import { formatInr } from '../../utils/format';
 
-export function OrderCard({ order }: { order: Order }) {
+export function OrderCard({
+  order,
+  onOpenProduct,
+}: {
+  order: Order;
+  onOpenProduct: (productId: string) => void;
+}) {
   return (
     <View style={styles.card}>
       <View style={styles.rowBetween}>
@@ -16,7 +22,9 @@ export function OrderCard({ order }: { order: Order }) {
       <Text style={styles.meta}>Payment: {order.paymentMethod === 'COD' ? 'COD' : 'UPI QR'}</Text>
       <Text style={styles.meta}>Total: {formatInr(order.total)}</Text>
       {order.items.slice(0, 3).map(orderItem => (
-        <Text key={orderItem.productId} style={styles.itemText}>• {orderItem.product.name} x {orderItem.quantity}</Text>
+        <Pressable key={orderItem.productId} onPress={() => onOpenProduct(orderItem.productId)}>
+          <Text style={styles.itemText}>• {orderItem.product.name} x {orderItem.quantity}</Text>
+        </Pressable>
       ))}
     </View>
   );

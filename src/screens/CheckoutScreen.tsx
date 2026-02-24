@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { AppButton } from '../components/common/AppButton';
 import { AppInput } from '../components/common/AppInput';
 import { useAppContext } from '../context/AppContext';
-import { colors } from '../constants/theme';
+import { colors, upi } from '../constants/theme';
 import { formatInr } from '../utils/format';
 
 export function CheckoutScreen() {
@@ -22,7 +22,7 @@ export function CheckoutScreen() {
   } = useAppContext();
 
   return (
-    <View style={styles.wrap}>
+    <ScrollView contentContainerStyle={styles.wrap}>
       <Text style={styles.title}>Checkout</Text>
 
       <AppInput value={orderAddress.street} onChangeText={v => setOrderAddressField('street', v)} placeholder="House / Street" />
@@ -37,6 +37,17 @@ export function CheckoutScreen() {
         <AppButton title="COD" variant={paymentMethod === 'COD' ? 'primary' : 'outline'} onPress={() => setPaymentMethod('COD')} />
       </View>
 
+      {paymentMethod === 'UPI_QR' ? (
+        <View style={styles.qrCard}>
+          <Text style={styles.qrTitle}>Scan QR and Pay</Text>
+          <Text style={styles.qrText}>UPI ID: {upi.id}</Text>
+          <Text style={styles.qrText}>Number: {upi.number}</Text>
+          <Text style={styles.qrText}>Name: {upi.name}</Text>
+          <Image source={{ uri: upi.qrImageUrl }} style={styles.qrImage} />
+          <Text style={styles.qrHelp}>Payment ke baad Place Order press karein.</Text>
+        </View>
+      ) : null}
+
       <View style={styles.summary}>
         <Text style={styles.summaryRow}>Subtotal: {formatInr(subtotal)}</Text>
         <Text style={styles.summaryRow}>Delivery: {deliveryCharge === 0 ? 'FREE' : formatInr(deliveryCharge)}</Text>
@@ -47,14 +58,14 @@ export function CheckoutScreen() {
         <AppButton title="Back to Cart" variant="outline" onPress={() => setTab('cart')} />
         <AppButton title="Place Order" loading={placingOrder} onPress={() => placeOrder().catch(() => undefined)} />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   wrap: {
-    flex: 1,
     padding: 12,
+    paddingBottom: 24,
   },
   title: {
     fontSize: 20,
@@ -71,6 +82,39 @@ const styles = StyleSheet.create({
   payRow: {
     gap: 8,
     marginBottom: 10,
+  },
+  qrCard: {
+    borderWidth: 1,
+    borderColor: '#bbf7d0',
+    borderRadius: 12,
+    backgroundColor: '#f0fdf4',
+    padding: 10,
+    marginBottom: 10,
+  },
+  qrTitle: {
+    color: '#166534',
+    fontSize: 15,
+    fontWeight: '800',
+    marginBottom: 4,
+  },
+  qrText: {
+    color: '#065f46',
+    fontSize: 12,
+    marginBottom: 2,
+    fontWeight: '600',
+  },
+  qrImage: {
+    width: '100%',
+    aspectRatio: 1,
+    borderRadius: 10,
+    marginTop: 8,
+    backgroundColor: '#e5e7eb',
+  },
+  qrHelp: {
+    marginTop: 8,
+    color: '#047857',
+    fontSize: 12,
+    fontWeight: '700',
   },
   summary: {
     borderWidth: 1,

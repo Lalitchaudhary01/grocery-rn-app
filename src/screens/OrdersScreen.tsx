@@ -7,7 +7,7 @@ import { colors } from '../constants/theme';
 import { useAppContext } from '../context/AppContext';
 
 export function OrdersScreen() {
-  const { myOrders, loadingMyOrders, reloadMyOrders } = useAppContext();
+  const { myOrders, loadingMyOrders, reloadMyOrders, openProductDetail } = useAppContext();
 
   return (
     <View style={styles.wrap}>
@@ -23,7 +23,7 @@ export function OrdersScreen() {
           data={myOrders}
           keyExtractor={item => item.id}
           contentContainerStyle={styles.listContent}
-          renderItem={({ item }) => <OrderCard order={item} />}
+          renderItem={({ item }) => <OrderCard order={item} onOpenProduct={openProductDetail} />}
           ListEmptyComponent={<Text style={styles.emptyText}>No orders yet.</Text>}
         />
       )}

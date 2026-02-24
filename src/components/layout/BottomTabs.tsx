@@ -32,12 +32,14 @@ export function BottomTabs({ role, active, cartCount, bottomInset, onChange }: B
   const tabs = role === 'ADMIN' ? adminTabs : customerTabs;
 
   return (
-    <View style={[styles.wrap, { paddingBottom: Math.max(bottomInset, 8) }]}>
+    <View style={[styles.wrap, { paddingBottom: Math.max(bottomInset, 10) }]}>
       {tabs.map(item => {
         const isActive = active === item.tab;
         return (
           <Pressable key={item.tab} style={[styles.tabBtn, isActive && styles.tabBtnActive]} onPress={() => onChange(item.tab)}>
-            <Text style={[styles.tabText, isActive && styles.tabTextActive]} numberOfLines={1}>{item.label}</Text>
+            <Text style={[styles.tabText, isActive && styles.tabTextActive]} numberOfLines={1}>
+              {item.label}
+            </Text>
           </Pressable>
         );
       })}
@@ -47,31 +49,33 @@ export function BottomTabs({ role, active, cartCount, bottomInset, onChange }: B
 
 const styles = StyleSheet.create({
   wrap: {
-    borderTopWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: '#fff',
-    paddingTop: 8,
-    paddingHorizontal: 8,
+    backgroundColor: '#ffffffee',
+    paddingTop: 10,
+    paddingHorizontal: 10,
     flexDirection: 'row',
     gap: 6,
+    borderTopWidth: 1,
+    borderColor: '#e5e7eb',
   },
   tabBtn: {
     flex: 1,
-    borderRadius: 10,
-    paddingVertical: 10,
+    borderRadius: 999,
+    paddingVertical: 11,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#f3f4f6',
   },
   tabBtnActive: {
     backgroundColor: '#dcfce7',
+    borderWidth: 1,
+    borderColor: '#86efac',
   },
   tabText: {
-    color: '#374151',
+    color: '#4b5563',
     fontWeight: '700',
-    fontSize: 11,
+    fontSize: 12,
   },
   tabTextActive: {
-    color: '#166534',
+    color: colors.primary,
   },
 });

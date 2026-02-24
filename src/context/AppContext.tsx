@@ -49,6 +49,9 @@ type AppContextValue = {
   filteredProducts: Product[];
   productsByCategory: Map<string, number>;
   reloadCatalog: () => Promise<void>;
+  selectedProduct: Product | null;
+  openProductDetail: (productId: string) => void;
+  closeProductDetail: () => void;
 
   cart: CartItem[];
   addToCart: (product: Product) => void;
@@ -141,6 +144,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoryId, setCategoryId] = useState('all');
   const [search, setSearch] = useState('');
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [detailBackTab, setDetailBackTab] = useState<AppTab>('products');
 
   const [cart, setCart] = useState<CartItem[]>([]);
 
@@ -261,11 +266,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     return map;
   }, [products]);
 
+  const selectedProduct = useMemo(
+    () => (selectedProductId ? products.find(product => product.id === selectedProductId) ?? null : null),
+    [products, selectedProductId],
+  );
+
   const subtotal = useMemo(() => cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0), [cart]);
   const deliveryCharge = useMemo(() => deliveryChargeFromSubtotal(subtotal), [subtotal]);
   const total = subtotal + deliveryCharge;
 
   const addToCart = useCallback((product: Product) => {
+    if (!user || user.role !== 'CUSTOMER') {
+      setSelectedRole('CUSTOMER');
+      setCustomerAuthMode('login');
+      setTab('profile');
+      Alert.alert('Login required', 'Cart me add karne ke liye customer login karein.');
+      return;
+    }
     if (product.stock <= 0) {
       Alert.alert('Out of stock', 'Ye product stock me nahi hai.');
       return;
@@ -279,7 +296,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
       return [...prev, { product, quantity: 1 }];
     });
-  }, []);
+  }, [setCustomerAuthMode, setSelectedRole, setTab, user]);
 
   const updateCartQty = useCallback((productId: string, delta: number) => {
     setCart(prev =>
@@ -298,6 +315,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const setOrderAddressField = useCallback((field: keyof DeliveryAddress, value: string) => {
     setOrderAddress(prev => ({ ...prev, [field]: value }));
   }, []);
+
+  const openProductDetail = useCallback((productId: string) => {
+    const exists = products.some(product => product.id === productId);
+    if (!exists) {
+      Alert.alert('Product unavailable', 'Ye product details abhi available nahi hain.');
+      return;
+    }
+    setDetailBackTab(tab);
+    setSelectedProductId(productId);
+    setTab('productDetail');
+  }, [products, tab]);
+
+  const closeProductDetail = useCallback(() => {
+    setTab(detailBackTab);
+  }, [detailBackTab]);
 
   const saveApiBaseUrl = useCallback(async () => {
     const next = draftApiBaseUrl.trim();
@@ -387,6 +419,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     setMyOrders([]);
     setAdminOrders([]);
+    setSelectedProductId(null);
     setTab('products');
   }, [apiBaseUrl, user]);
 
@@ -570,6 +603,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     filteredProducts,
     productsByCategory,
     reloadCatalog,
+    selectedProduct,
+    openProductDetail,
+    closeProductDetail,
 
     cart,
     addToCart,

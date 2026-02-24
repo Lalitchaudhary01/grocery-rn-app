@@ -16,6 +16,7 @@ import { AdminDashboardScreen } from './screens/AdminDashboardScreen';
 import { AdminOrdersScreen } from './screens/AdminOrdersScreen';
 import { AdminProductsScreen } from './screens/AdminProductsScreen';
 import { AdminCategoriesScreen } from './screens/AdminCategoriesScreen';
+import { ProductDetailScreen } from './screens/ProductDetailScreen';
 
 export function AppRoot() {
   const insets = useSafeAreaInsets();
@@ -23,6 +24,9 @@ export function AppRoot() {
 
   const cartCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
 
+  const isGuest = !user;
+  const isCustomer = user?.role === 'CUSTOMER';
+  const isAdmin = user?.role === 'ADMIN';
   const userName = user?.role === 'ADMIN' ? 'Admin' : user?.name || 'Guest';
 
   return (
@@ -30,30 +34,30 @@ export function AppRoot() {
       <TopHeader userName={userName} cartCount={cartCount} topInset={insets.top} />
 
       <View style={styles.content}>
-        {!user ? <AuthScreen /> : null}
+        {tab === 'productDetail' ? <ProductDetailScreen /> : null}
+        {isGuest && tab === 'products' ? <ProductsScreen /> : null}
+        {isGuest && tab !== 'products' && tab !== 'productDetail' ? <AuthScreen /> : null}
 
-        {user?.role === 'CUSTOMER' && tab === 'products' ? <ProductsScreen /> : null}
-        {user?.role === 'CUSTOMER' && tab === 'cart' ? <CartScreen /> : null}
-        {user?.role === 'CUSTOMER' && tab === 'checkout' ? <CheckoutScreen /> : null}
-        {user?.role === 'CUSTOMER' && tab === 'orders' ? <OrdersScreen /> : null}
+        {isCustomer && tab === 'products' ? <ProductsScreen /> : null}
+        {isCustomer && tab === 'cart' ? <CartScreen /> : null}
+        {isCustomer && tab === 'checkout' ? <CheckoutScreen /> : null}
+        {isCustomer && tab === 'orders' ? <OrdersScreen /> : null}
 
-        {user?.role === 'ADMIN' && tab === 'adminDashboard' ? <AdminDashboardScreen /> : null}
-        {user?.role === 'ADMIN' && tab === 'adminOrders' ? <AdminOrdersScreen /> : null}
-        {user?.role === 'ADMIN' && tab === 'adminProducts' ? <AdminProductsScreen /> : null}
-        {user?.role === 'ADMIN' && tab === 'adminCategories' ? <AdminCategoriesScreen /> : null}
+        {isAdmin && tab === 'adminDashboard' ? <AdminDashboardScreen /> : null}
+        {isAdmin && tab === 'adminOrders' ? <AdminOrdersScreen /> : null}
+        {isAdmin && tab === 'adminProducts' ? <AdminProductsScreen /> : null}
+        {isAdmin && tab === 'adminCategories' ? <AdminCategoriesScreen /> : null}
 
-        {user && tab === 'profile' ? <ProfileScreen /> : null}
+        {isCustomer && tab === 'profile' ? <ProfileScreen /> : null}
       </View>
 
-      {user ? (
-        <BottomTabs
-          role={user.role}
-          active={tab}
-          cartCount={cartCount}
-          bottomInset={insets.bottom}
-          onChange={setTab}
-        />
-      ) : null}
+      <BottomTabs
+        role={user?.role ?? 'CUSTOMER'}
+        active={tab}
+        cartCount={cartCount}
+        bottomInset={insets.bottom}
+        onChange={setTab}
+      />
     </View>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { AppButton } from '../components/common/AppButton';
 import { colors } from '../constants/theme';
@@ -7,7 +7,7 @@ import { useAppContext } from '../context/AppContext';
 import { formatInr } from '../utils/format';
 
 export function AdminOrdersScreen() {
-  const { adminOrders, loadingAdminOrders, reloadAdminOrders, adminSetOrderStatus } = useAppContext();
+  const { adminOrders, loadingAdminOrders, reloadAdminOrders, adminSetOrderStatus, openProductDetail } = useAppContext();
 
   return (
     <View style={styles.wrap}>
@@ -33,6 +33,11 @@ export function AdminOrdersScreen() {
               <Text style={styles.meta}>Phone: {item.address?.phone || 'N/A'}</Text>
               <Text style={styles.meta}>Amount: {formatInr(item.total)}</Text>
               <Text style={styles.meta}>Address: {item.address?.street || 'N/A'}</Text>
+              {item.items.slice(0, 4).map(orderItem => (
+                <Pressable key={orderItem.productId} onPress={() => openProductDetail(orderItem.productId)}>
+                  <Text style={styles.itemText}>• {orderItem.product.name} x {orderItem.quantity}</Text>
+                </Pressable>
+              ))}
 
               <View style={styles.actions}>
                 <AppButton title="Confirm" variant="outline" onPress={() => adminSetOrderStatus(item.id, 'CONFIRMED').catch(() => undefined)} />
@@ -99,6 +104,12 @@ const styles = StyleSheet.create({
     marginTop: 3,
     color: '#374151',
     fontSize: 13,
+  },
+  itemText: {
+    marginTop: 3,
+    color: '#4b5563',
+    fontSize: 12,
+    fontWeight: '600',
   },
   actions: {
     marginTop: 8,

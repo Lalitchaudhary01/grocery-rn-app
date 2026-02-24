@@ -11,13 +11,18 @@ type TopHeaderProps = {
 export function TopHeader({ userName, cartCount, topInset }: TopHeaderProps) {
   return (
     <View style={[styles.wrap, { paddingTop: Math.max(topInset, 10) }]}>
-      <View>
+      <View style={styles.left}>
+        <View style={styles.logoDot} />
         <Text style={styles.name}>Apni Dukaan</Text>
         <Text style={styles.tagline}>3 KM ke andar Home Delivery</Text>
       </View>
       <View style={styles.right}>
-        <View style={styles.badge}><Text style={styles.badgeText}>{cartCount}</Text></View>
-        <Text style={styles.userName}>{userName}</Text>
+        <View style={styles.badge}>
+          <Text style={styles.badgeText}>{cartCount}</Text>
+        </View>
+        <Text style={styles.userName} numberOfLines={1}>
+          {userName}
+        </Text>
       </View>
     </View>
   );
@@ -32,14 +37,26 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  left: {
+    flexDirection: 'column',
+    gap: 2,
+  },
+  logoDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: colors.accent,
+    marginBottom: 2,
+  },
   name: {
     color: '#fff',
-    fontSize: 22,
-    fontWeight: '800',
+    fontSize: 26,
+    lineHeight: 30,
+    fontWeight: '900',
   },
   tagline: {
     color: '#d1fae5',
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '600',
   },
   right: {
@@ -64,5 +81,6 @@ const styles = StyleSheet.create({
   userName: {
     color: '#fff',
     fontWeight: '700',
+    maxWidth: 100,
   },
 });

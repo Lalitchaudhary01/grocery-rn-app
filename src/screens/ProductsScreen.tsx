@@ -2,6 +2,7 @@ import React from 'react';
 import { ActivityIndicator, FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { useAppContext } from '../context/AppContext';
+import { AppButton } from '../components/common/AppButton';
 import { AppInput } from '../components/common/AppInput';
 import { ProductCard } from '../components/product/ProductCard';
 import { parseCategoryLabel } from '../utils/format';
@@ -20,15 +21,42 @@ export function ProductsScreen() {
     loadingProducts,
     loadingCategories,
     addToCart,
+    updateCartQty,
+    cart,
+    openProductDetail,
+    user,
+    setSelectedRole,
+    setCustomerAuthMode,
+    setTab,
   } = useAppContext();
+  const cartQtyById = new Map(cart.map(item => [item.product.id, item.quantity]));
 
   return (
     <View style={styles.fill}>
+      {!user ? (
+        <View style={styles.guestNotice}>
+          <Text style={styles.guestNoticeText}>Products dekh sakte ho. Cart/order ke liye login required hai.</Text>
+          <AppButton
+            title="Login / Register"
+            variant="outline"
+            onPress={() => {
+              setSelectedRole('CUSTOMER');
+              setCustomerAuthMode('login');
+              setTab('profile');
+            }}
+          />
+        </View>
+      ) : null}
+
       <View style={styles.toolbar}>
+        <View style={styles.sectionHead}>
+          <Text style={styles.sectionTitle}>Popular Products</Text>
+          <Text style={styles.sectionSub}>{filteredProducts.length} items available</Text>
+        </View>
         <AppInput
           value={search}
           onChangeText={setSearch}
-          placeholder="Search products"
+          placeholder="Search product ya category"
           style={styles.searchInput}
         />
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -56,8 +84,22 @@ export function ProductsScreen() {
           data={filteredProducts}
           keyExtractor={item => item.id}
           contentContainerStyle={styles.listContent}
-          renderItem={({ item }) => <ProductCard product={item} onAdd={addToCart} />}
-          ListEmptyComponent={<Text style={styles.emptyText}>No products found.</Text>}
+          renderItem={({ item }) => (
+            <ProductCard
+              product={item}
+              onAdd={addToCart}
+              onOpen={openProductDetail}
+              quantity={cartQtyById.get(item.id) || 0}
+              onIncrease={() => updateCartQty(item.id, 1)}
+              onDecrease={() => updateCartQty(item.id, -1)}
+            />
+          )}
+          ListEmptyComponent={
+            <View style={styles.emptyWrap}>
+              <Text style={styles.emptyTitle}>No products found</Text>
+              <Text style={styles.emptyText}>Search change karein ya category reset karein.</Text>
+            </View>
+          }
         />
       )}
     </View>
@@ -66,9 +108,39 @@ export function ProductsScreen() {
 
 const styles = StyleSheet.create({
   fill: { flex: 1 },
+  guestNotice: {
+    marginHorizontal: 12,
+    marginTop: 10,
+    marginBottom: 4,
+    padding: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#facc15',
+    backgroundColor: '#fffbeb',
+    gap: 8,
+  },
+  guestNoticeText: {
+    color: '#854d0e',
+    fontSize: 12,
+    fontWeight: '700',
+  },
   toolbar: {
     padding: 12,
     gap: 10,
+  },
+  sectionHead: {
+    marginBottom: 4,
+  },
+  sectionTitle: {
+    color: '#111827',
+    fontSize: 22,
+    fontWeight: '900',
+  },
+  sectionSub: {
+    marginTop: 2,
+    color: '#4b5563',
+    fontSize: 13,
+    fontWeight: '600',
   },
   searchInput: {
     marginBottom: 0,
@@ -101,11 +173,22 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: 12,
-    paddingBottom: 24,
+    paddingBottom: 30,
+    gap: 2,
+  },
+  emptyWrap: {
+    marginTop: 30,
+    alignItems: 'center',
+  },
+  emptyTitle: {
+    color: '#111827',
+    fontSize: 16,
+    fontWeight: '800',
+    marginBottom: 4,
   },
   emptyText: {
     textAlign: 'center',
     color: '#4b5563',
-    marginTop: 18,
+    fontSize: 12,
   },
 });

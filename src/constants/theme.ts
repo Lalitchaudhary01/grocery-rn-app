@@ -20,3 +20,10 @@ export const image = {
   fallback:
     'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80',
 } as const;
+
+export const upi = {
+  id: '8923541428@axl',
+  number: '8923541428',
+  name: 'Mrs Aneeta',
+  qrImageUrl: 'https://grocery-app-flame-eight.vercel.app/phonepe-qr.jpeg',
+} as const;
