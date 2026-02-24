@@ -36,12 +36,17 @@ const styles = StyleSheet.create({
   base: {
     borderRadius: 12,
     paddingHorizontal: 14,
-    paddingVertical: 11,
+    paddingVertical: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
   primary: {
     backgroundColor: colors.primary,
+    shadowColor: '#000',
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 2,
   },
   danger: {
     backgroundColor: '#ef4444',
@@ -54,10 +59,12 @@ const styles = StyleSheet.create({
   solidText: {
     color: '#fff',
     fontWeight: '800',
+    fontSize: 14,
   },
   outlineText: {
     color: colors.primary,
     fontWeight: '800',
+    fontSize: 14,
   },
   disabled: {
     opacity: 0.6,

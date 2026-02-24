@@ -78,7 +78,12 @@ export function ProductsScreen() {
       </View>
 
       {loadingProducts || loadingCategories ? (
-        <View style={styles.center}><ActivityIndicator size="large" color={colors.primary} /></View>
+        <View style={styles.center}>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <View style={styles.skeletonCard} />
+          <View style={styles.skeletonCard} />
+          <View style={styles.skeletonCard} />
+        </View>
       ) : (
         <FlatList
           data={filteredProducts}
@@ -168,8 +173,16 @@ const styles = StyleSheet.create({
   },
   center: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'stretch',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 12,
+    gap: 10,
+    paddingTop: 20,
+  },
+  skeletonCard: {
+    height: 108,
+    borderRadius: 16,
+    backgroundColor: '#e5e7eb',
   },
   listContent: {
     padding: 12,

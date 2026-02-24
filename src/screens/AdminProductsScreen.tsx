@@ -63,6 +63,7 @@ export function AdminProductsScreen() {
     <View style={styles.wrap}>
       <View style={styles.card}>
         <Text style={styles.title}>{editingId ? 'Edit Product' : 'Add Product'}</Text>
+        <Text style={styles.subtitle}>MRP, stock and category ke saath product manage karein.</Text>
         <AppInput value={name} onChangeText={setName} placeholder="Product name" />
         <AppInput value={price} onChangeText={setPrice} placeholder="Price" keyboardType="number-pad" />
         <AppInput value={stock} onChangeText={setStock} placeholder="Stock" keyboardType="number-pad" />
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#dcfce7',
     borderRadius: 14,
     padding: 12,
     marginBottom: 10,
@@ -117,6 +118,12 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '800',
     color: colors.text,
+    marginBottom: 4,
+  },
+  subtitle: {
+    color: '#4b5563',
+    fontSize: 12,
+    fontWeight: '600',
     marginBottom: 8,
   },
   listContent: {
@@ -125,7 +132,7 @@ const styles = StyleSheet.create({
   itemCard: {
     backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#dcfce7',
     borderRadius: 12,
     padding: 10,
     marginBottom: 8,

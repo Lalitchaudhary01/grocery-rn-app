@@ -27,7 +27,9 @@ export function AdminOrdersScreen() {
             <View style={styles.card}>
               <View style={styles.rowBetween}>
                 <Text style={styles.orderId}>#{item.id.slice(0, 8).toUpperCase()}</Text>
-                <Text style={styles.status}>{item.status}</Text>
+                <Text style={[styles.status, item.status === 'PENDING' ? styles.pending : item.status === 'DELIVERED' ? styles.delivered : styles.activeStatus]}>
+                  {item.status}
+                </Text>
               </View>
               <Text style={styles.meta}>Customer: {item.customer?.name || item.customer?.email || 'N/A'}</Text>
               <Text style={styles.meta}>Phone: {item.address?.phone || 'N/A'}</Text>
@@ -81,7 +83,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#dcfce7',
     borderRadius: 14,
     padding: 12,
     marginBottom: 10,
@@ -99,6 +101,23 @@ const styles = StyleSheet.create({
   status: {
     color: '#166534',
     fontWeight: '800',
+    fontSize: 11,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 999,
+    backgroundColor: '#dcfce7',
+  },
+  pending: {
+    color: '#92400e',
+    backgroundColor: '#fef3c7',
+  },
+  delivered: {
+    color: '#065f46',
+    backgroundColor: '#d1fae5',
+  },
+  activeStatus: {
+    color: '#1e40af',
+    backgroundColor: '#dbeafe',
   },
   meta: {
     marginTop: 3,

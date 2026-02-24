@@ -12,7 +12,10 @@ export function OrdersScreen() {
   return (
     <View style={styles.wrap}>
       <View style={styles.header}>
-        <Text style={styles.title}>My Orders</Text>
+        <View>
+          <Text style={styles.title}>My Orders</Text>
+          <Text style={styles.subtitle}>Track status: Pending to Delivered</Text>
+        </View>
         <AppButton title="Refresh" variant="outline" onPress={() => reloadMyOrders().catch(() => undefined)} />
       </View>
 
@@ -42,9 +45,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: 24,
+    fontWeight: '900',
     color: colors.text,
+  },
+  subtitle: {
+    marginTop: 2,
+    color: '#4b5563',
+    fontSize: 12,
+    fontWeight: '600',
   },
   center: {
     flex: 1,

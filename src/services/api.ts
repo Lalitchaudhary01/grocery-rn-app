@@ -1,5 +1,4 @@
 export const defaultApiBaseUrl = 'https://grocery-app-flame-eight.vercel.app';
-const fallbackApiBaseUrls = ['http://10.0.2.2:3000', 'http://localhost:3000'] as const;
 
 export type ApiResult<T> = {
   ok: boolean;
@@ -13,9 +12,8 @@ export async function requestApi<T>(
   path: string,
   init?: RequestInit,
 ): Promise<ApiResult<T>> {
-  const candidates = Array.from(
-    new Set([baseUrl.trim(), ...fallbackApiBaseUrls]).values(),
-  ).filter(Boolean);
+  const normalizedBaseUrl = (baseUrl || defaultApiBaseUrl).trim().replace(/\/+$/, '');
+  const candidates = [normalizedBaseUrl];
 
   let lastNetworkError: string | null = null;
 
@@ -46,10 +44,13 @@ export async function requestApi<T>(
     }
   }
 
+  const lastTried = candidates[candidates.length - 1] || normalizedBaseUrl;
   return {
     ok: false,
     status: 0,
     data: null,
-    error: lastNetworkError || 'Network error',
+    error:
+      lastNetworkError ||
+      `Network request failed (${lastTried}${path}). Check emulator internet/date-time and HTTPS access.`,
   };
 }

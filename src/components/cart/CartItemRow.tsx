@@ -37,10 +37,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#dcfce7',
     marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 1,
   },
   touchArea: {
     flex: 1,
@@ -57,9 +62,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   name: {
-    fontSize: 15,
+    fontSize: 16,
     color: colors.text,
-    fontWeight: '700',
+    fontWeight: '800',
   },
   meta: {
     color: colors.subText,
@@ -69,7 +74,8 @@ const styles = StyleSheet.create({
   total: {
     color: '#047857',
     fontWeight: '800',
-    marginTop: 4,
+    marginTop: 6,
+    fontSize: 15,
   },
   qtyRow: {
     flexDirection: 'column',

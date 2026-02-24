@@ -54,9 +54,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#dcfce7',
     padding: 12,
     marginBottom: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 1,
   },
   rowBetween: {
     flexDirection: 'row',
@@ -80,9 +85,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   itemText: {
-    marginTop: 2,
+    marginTop: 4,
     fontSize: 12,
-    color: '#4b5563',
+    color: '#047857',
+    fontWeight: '700',
   },
   badge: {
     borderRadius: 999,

@@ -30,6 +30,7 @@ export function AdminCategoriesScreen() {
     <View style={styles.wrap}>
       <View style={styles.card}>
         <Text style={styles.title}>{editingId ? 'Edit Category' : 'Add Category'}</Text>
+        <Text style={styles.subtitle}>Category naam simple aur clear rakhein.</Text>
         <AppInput value={name} onChangeText={setName} placeholder="Category name" />
         <AppButton title={editingId ? 'Update Category' : 'Create Category'} onPress={() => submit().catch(() => undefined)} />
       </View>
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#dcfce7',
     borderRadius: 14,
     padding: 12,
     marginBottom: 10,
@@ -68,6 +69,12 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '800',
     color: colors.text,
+    marginBottom: 4,
+  },
+  subtitle: {
+    color: '#4b5563',
+    fontSize: 12,
+    fontWeight: '600',
     marginBottom: 8,
   },
   listContent: {
@@ -76,7 +83,7 @@ const styles = StyleSheet.create({
   itemCard: {
     backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#dcfce7',
     borderRadius: 12,
     padding: 10,
     marginBottom: 8,
