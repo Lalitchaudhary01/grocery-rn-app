@@ -48,7 +48,7 @@ export function AppRoot() {
         {isAdmin && tab === 'adminProducts' ? <AdminProductsScreen /> : null}
         {isAdmin && tab === 'adminCategories' ? <AdminCategoriesScreen /> : null}
 
-        {isCustomer && tab === 'profile' ? <ProfileScreen /> : null}
+        {(isCustomer || isAdmin) && tab === 'profile' ? <ProfileScreen /> : null}
       </View>
 
       <BottomTabs
